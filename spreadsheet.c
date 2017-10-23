@@ -64,13 +64,13 @@
 void  * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst){
      Cell * current = s->cells;
      int i = 0; 
-	while(current - s->cells < s->cellsCount + 1){
+	while(current - s->cells < s->cellsCount ){
  	   
 		if(strcmp(current[i].cellAddress,cellAddresStr)==0){
 	 	   *dst = &current[i]; 
 		   return;
 		}
-		current+=current[i].size;
+		current++;
 		i++;
 	} 
 	
