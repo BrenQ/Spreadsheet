@@ -14,7 +14,7 @@
 #include "cell.h"
 
  void init(SpreadSheet* s){
-	 s->cells = 0x0;
+	 memset(s,0x0,sizeof(s));
 	 s->cellsCount = 0;
  }
  void cleanUp(SpreadSheet* s){
@@ -33,31 +33,27 @@
 	 Cell * dst = 0x0;
 	 initCell(&c,cellAddresStr,v,vSize,"number");
 	 
- 	 if(s->cellsCount ==0){  
-	    s->cells = (Cell *) malloc((s->cellsCount + 1) * sizeof(c));
-	    s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
- 	    s->cells[s->cellsCount] = c;
-	    s->cellsCount++;
- 
-	 }else{
-	    searchCelladdres(s,cellAddresStr,&dst);
-	    
-	    if(dst==0x0) {
-	      s->cells = (Cell *) realloc(s->cells,(s->cellsCount+1)*sizeof(c));
-	      s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
-	      s->cells[s->cellsCount] = c;
-	      s->cellsCount++;
-    
-	    }else{
-	      setValue(dst,v,vSize,"number");		
-	    }	
- 	 
-	}	
-	 
 
+	 searchCelladdres(s,cellAddresStr,&dst);
+	    
+	 if(dst==0x0) {
+	    s->cells = (Cell *) realloc(s->cells,(s->cellsCount+1)*sizeof(c));
+	    s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
+	    s->cells[s->cellsCount] = c;
+	    s->cellsCount++;
+    
+	 }else{
+
+	    setValue(dst,v,vSize,"number");		
+
+	 }	
+ 	 	
  }
 
-
+/**
+ * Busca el puntero de la celda indicada
+ *
+ * */
 void  * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst){
      Cell * current = s->cells;
      int i = 0; 
@@ -82,7 +78,27 @@ void  * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst
 
  **/
  void setLabel( SpreadSheet* s, const char* cellAddresStr, const char* v){
+	
+    Cell c ;
+    Cell * dst = 0x0;
+    initCell(&c,cellAddresStr,v,strlen(v),"text");
 
+
+    searchCelladdres(s,cellAddresStr,&dst);
+
+    if(dst==0x0) {
+        s->cells = (Cell *) realloc(s->cells,(s->cellsCount+1)*sizeof(c));
+        s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
+        s->cells[s->cellsCount] = c;
+        s->cellsCount++;
+
+    }else{
+
+        setValue(dst,v,strlen(v),"text");
+
+     }
+	
+	
  }
 
  /**

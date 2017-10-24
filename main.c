@@ -48,6 +48,7 @@ int main(){
 	setNumber(&s,"A1",&valor6,sizeof(valor6));
 	setNumber(&s,"B1",&valor5,sizeof(valor5));
 	setNumber(&s,"B1",&valor7,sizeof(valor7));
+	setLabel(&s,"C1",palabra);
      
 }
 
