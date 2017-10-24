@@ -126,5 +126,6 @@ void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst)
 
  //void getCountIf(SpreadSheet* s, ...);
 
+ void obtainRange(char* rangeStr, char* minRange, char* maxRange);
 #endif
 
