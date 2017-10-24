@@ -37,26 +37,23 @@
 	    s->cells = (Cell *) malloc((s->cellsCount + 1) * sizeof(c));
 	    s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
  	    s->cells[s->cellsCount] = c;
+	    s->cellsCount++;
  
 	 }else{
 	    searchCelladdres(s,cellAddresStr,&dst);
 	    
 	    if(dst==0x0) {
 	      s->cells = (Cell *) realloc(s->cells,(s->cellsCount+1)*sizeof(c));
+	      s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(c));
 	      s->cells[s->cellsCount] = c;
+	      s->cellsCount++;
     
 	    }else{
 	      setValue(dst,v,vSize,"number");		
 	    }	
  	 
-	 }
-	
-	 
-	if(dst){
-	  //setValue(dst,v,vSize,"number");
 	}	
 	 
-	 s->cellsCount++;
 
  }
 
@@ -66,8 +63,8 @@ void  * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst
      int i = 0; 
 	while(current - s->cells < s->cellsCount ){
  	   
-		if(strcmp(current[i].cellAddress,cellAddresStr)==0){
-	 	   *dst = &current[i]; 
+		if(strcmp(current->cellAddress,cellAddresStr)==0){
+	 	   *dst = current; 
 		   return;
 		}
 		current++;

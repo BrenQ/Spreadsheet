@@ -38,6 +38,8 @@ int main(){
 */
 	int valor5 = 38;
 	float valor6 = 65.5;
+
+	int valor7 = 30;
 	
 	char * palabra = "Hola";
 
@@ -45,7 +47,7 @@ int main(){
 	init(&s);
 	setNumber(&s,"A1",&valor6,sizeof(valor6));
 	setNumber(&s,"B1",&valor5,sizeof(valor5));
-//	setNumber(&s,"B1",&valor6,sizeof(valor6));
+	setNumber(&s,"B1",&valor7,sizeof(valor7));
      
 }
 
