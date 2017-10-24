@@ -162,7 +162,10 @@ ecciona una celda de la hoja de calculo y
 
  **/
  void get( SpreadSheet* s, const char* cellAddresStr, void* dst){
-
+      Cell * ptr;
+      searchCelladdres(s,cellAddresStr,&ptr);
+      memcpy(dst,ptr->value,2*ptr->size);
+     printf("Test");
  }
 
  /**
