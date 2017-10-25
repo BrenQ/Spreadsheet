@@ -207,31 +207,27 @@ void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
  **/
 
 void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-	Cell * ptr = (Cell*) malloc(sizeof(Cell));
-	int sumatory = 0;
+	Cell * ptr;
+	float sumatory = 0;
 	char iRangeLet[4] = "";
 	char fRangeLet[4] = "";
-	get(s, cellAddressStr, ptr);
-	char * range = (char*)malloc(sizeof(char *)*ptr->size+1);
-	int a = strlen(ptr->value);
-	printf("%u",a);
-	strcpy(range, (char*)ptr->value);
-	obtainRange(range, iRangeLet, fRangeLet);
+	searchCelladdres(s, cellAddressStr, &ptr);
+	obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
 
 	Cell * current = s->cells;
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
-		if ((current->type - NUMBER) == 0
+		if (strcmp(current->type, NUMBER) == 0
 				&& strcmp(iRangeLet, current->cellAddress) <= 0
 				&& strcmp(current->cellAddress, fRangeLet) <= 0) {
-			sumatory += (int)(current->value);
+			sumatory +=  *(float*)(current->value);
 		}
 		current++;
 		i++;
 
 	}
 
-	memcpy((int*)dst, (int*)sumatory, sizeof(int));
+	memcpy(dst, &sumatory, sizeof(float));
 
 }
 
