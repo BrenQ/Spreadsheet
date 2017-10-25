@@ -218,8 +218,8 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
 		if (strcmp(current->type, NUMBER) == 0
-				&& strcmp(iRangeLet, current->cellAddress) <= 0
-				&& strcmp(current->cellAddress, fRangeLet) <= 0) {
+				&& strverscmp(iRangeLet, current->cellAddress) <= 0
+				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
 			sumatory +=  *(float*)(current->value);
 		}
 		current++;
