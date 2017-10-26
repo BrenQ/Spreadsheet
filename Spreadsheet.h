@@ -38,7 +38,18 @@ typedef struct _SpreadSheet{
 
  **/
 
+/**  Devuelve el puntero a una celda especifica **/
+
+
 void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,Cell ** dst);
+
+
+/** Almacena una funcion en la celda especifica **/
+
+void setFunction(SpreadSheet* s, const char* cellAddressStr,
+                const char* cellAddressFunction);
+
+
  void setIdentity(SpreadSheet* s, const char* cellAddressStr, const char* cellAddressReferenceStr);
 
  /**

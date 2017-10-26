@@ -103,6 +103,35 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 
 }
 
+
+/**
+   Almacena una funcion en la hoja de calculo
+    @param s Hoja de calculo
+    @param cellAdressStr Direccion de la celda
+    @param cellAdressRefrenceStr Referencia a direccion de la celda
+**/
+
+void setFunction(SpreadSheet* s, const char* cellAddressStr,
+                const char* cellAddressFunction) {
+	
+	Cell * dst = 0x0;
+
+        searchCelladdres(s, cellAddressStr, &dst);
+
+        if (dst == 0x0) {
+                Cell c;
+                initCell(&c, cellAddressStr, cellAddressFunction, strlen(cellAddressFunction)+1, FUNCTION);
+                s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
+                s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
+                s->cells[s->cellsCount] = c;
+                s->cellsCount++;
+
+        } else {
+                setValue(dst, cellAddressFunction, strlen(cellAddressFunction), FUNCTION);
+        }
+
+}
+
 /**
  Selecciona una celda de la hoja de calculo y
  @param s Hoja de calculo
@@ -112,7 +141,7 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
  **/
 void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressReferenceStr) {
-
+     setFunction(s,cellAddressStr,cellAddressReferenceStr);
 }
 
 /**
@@ -124,23 +153,9 @@ void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 
  **/
 void setSummatory(SpreadSheet* s, const char* cellAddressStr,
-		const char* cellAddressRangeStr) {
-	Cell * dst = 0x0;
+		const char* cellAddressRangeStr) { 	
 
-	searchCelladdres(s, cellAddressStr, &dst);
-
-	if (dst == 0x0) {
-		Cell c;
-		initCell(&c, cellAddressStr, cellAddressRangeStr, strlen(cellAddressRangeStr)+1, FUNCTION);
-		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
-		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
-		s->cells[s->cellsCount] = c;
-		s->cellsCount++;
-
-	} else {
-		setValue(dst, cellAddressRangeStr, strlen(cellAddressRangeStr), NUMBER);
-	}
-
+	setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
 /**
@@ -154,7 +169,7 @@ void setSummatory(SpreadSheet* s, const char* cellAddressStr,
 
 void setAverage(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressRangeStr) {
-
+    setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
 /**
