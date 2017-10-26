@@ -263,6 +263,30 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
  **/
 
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
+    
+        Cell * ptr;
+        float sumatory = 0;
+	float average = 0;
+        char iRangeLet[4] = "";
+        char fRangeLet[4] = "";
+        searchCelladdres(s, cellAddressStr, &ptr);
+        obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
+
+        Cell * current = s->cells;
+        int count = 0;
+        while ((current - s->cells) < s->cellsCount) {
+                if (strcmp(current->type, NUMBER) == 0
+                                && strverscmp(iRangeLet, current->cellAddress) <= 0
+                                && strverscmp(current->cellAddress, fRangeLet) <= 0) {
+                        sumatory +=  *(float*)(current->value);
+			count++;		
+                }
+                current++;
+            
+        }
+	
+	average =  sumatory / count;
+        memcpy(dst, &average, sizeof(float));
 
 }
 
