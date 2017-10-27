@@ -34,8 +34,12 @@ void getValue(Cell * this, const char * cellAddress, void * dst){
 }
 
 void release(Cell* this){
-	free(this->cellAddress);
-	free(this->value);
+	if(this->cellAddress){
+		free(this->cellAddress);
+	}
+	if(this->value){
+		free(this->value);
+	}
 
 	this->cellAddress=0x0;
 	this->value=0x0;

@@ -22,6 +22,21 @@ void init(SpreadSheet* s) {
 
 void cleanUp(SpreadSheet* s) {
 
+	if (s->cells){
+			Cell* current = s->cells;
+
+			while((current - s->cells) < s->cellsCount){
+
+				release(current);
+				current += current->size;
+
+			}
+
+			free(s->cells);
+		}
+
+		s->cells = 0x0;
+
 }
 
 /**
