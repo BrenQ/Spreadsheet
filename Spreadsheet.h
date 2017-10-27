@@ -82,8 +82,7 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
 
  **/
 
-// void setCountIf(SpreadSheet* s, ...);
-
+void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr,const char * criteria);
 
    /**
 	Devuelve el valor de una direccion de celda
@@ -135,8 +134,11 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
 
  **/
 
- //void getCountIf(SpreadSheet* s, ...);
+ void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * cellAddressRangeStr , const char * condition , const void * v , const unsigned vSize, void * dst);
 
  void obtainRange(char* rangeStr, char* minRange, char* maxRange);
+
+ int conditionResult(const char * condition,int result);
+
 #endif
 
