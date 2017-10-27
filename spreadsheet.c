@@ -182,7 +182,7 @@ void setAverage(SpreadSheet* s, const char* cellAddressStr,
 **/
 
 void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr,const char * criteria){
-
+     setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
 /**
@@ -303,7 +303,7 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
  **/
 
- void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * cellAddressRangeStr , const char * condition , const void * v , const unsigned vSize, void * dst){
+ void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst){
 
 	Cell * ptr;
         int count  = 0;
@@ -327,9 +327,6 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
                 current++;
 
         }
-
-       
-        memcpy(dst, &count, sizeof(float));
 	
 
 }

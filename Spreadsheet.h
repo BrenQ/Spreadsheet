@@ -134,7 +134,7 @@ void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAdd
 
  **/
 
- void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * cellAddressRangeStr , const char * condition , const void * v , const unsigned vSize, void * dst);
+ void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst);
 
  void obtainRange(char* rangeStr, char* minRange, char* maxRange);
 
