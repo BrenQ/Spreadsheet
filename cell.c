@@ -5,7 +5,8 @@
 #include "cell.h"
 
 
-void initCell(Cell* this, const char * cellAddress,const void * v , unsigned size, char * type){
+void initCell(Cell* this, const char * cellAddress, const void * v,
+		unsigned size, char * type){
 	if(cellAddress == 0x0){
 		return;
 	}

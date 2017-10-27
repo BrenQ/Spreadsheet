@@ -132,7 +132,7 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
 
 	} else {
 		setValue(dst, cellAddressFunction, strlen(cellAddressFunction),
-				FUNCTION);
+		FUNCTION);
 	}
 
 }
@@ -186,8 +186,13 @@ void setAverage(SpreadSheet* s, const char* cellAddressStr,
 
  **/
 
-// void setCountIf(SpreadSheet* s, ...);
+void setCountIf(SpreadSheet* s, const char * cellAddressStr,
+		const char * cellAddressRangeStr, const char * criteria) {
+
+}
+
 /**
+
  Devuelve el valor de una direccion de celda
 
  @param s Hoja de calculo
@@ -314,4 +319,47 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
  **/
 
-//void getCountIf(SpreadSheet* s, ...);
+void getCountIf(SpreadSheet* s, const char * cellAddressStr,
+		const char * cellAddressRangeStr, const char * condition,
+		const void * v, const unsigned vSize, void * dst) {
+
+	Cell * ptr;
+	int count = 0;
+	char iRangeLet[4] = "";
+	char fRangeLet[4] = "";
+	int result = 0;
+	searchCelladdres(s, cellAddressStr, &ptr);
+	obtainRange((char*) ptr->value, iRangeLet, fRangeLet);
+
+	Cell * current = s->cells;
+
+	while ((current - s->cells) < s->cellsCount) {
+		if (strcmp(current->type, FUNCTION) != 0
+				&& strverscmp(iRangeLet, current->cellAddress) <= 0
+				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
+
+			result = memcmp(current->value, v, vSize);
+
+			conditionResult(condition, result, &count);
+		}
+		current++;
+
+	}
+
+	memcpy(dst, &count, sizeof(float));
+
+}
+
+void conditionResult(const char * condition, int result, int * dst) {
+
+	if (strcmp(">=", condition) == 0 && result >= 0) {
+		*dst++;
+	} else if (strcmp("<=", condition) == 0 && result >= 0) {
+		dst++;
+	} else if (strcmp("=", condition) == 0 && result == 0) {
+		dst++;
+	} else if (strcmp("<>", condition) == 0 && result != 0) {
+		dst++;
+	}
+
+}
