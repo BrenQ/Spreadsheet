@@ -138,7 +138,7 @@ void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAdd
 
  void obtainRange(char* rangeStr, char* minRange, char* maxRange);
 
- int conditionResult(const char * condition,int result);
+ void conditionResult(const char * condition,int result, int * dst);
 
 #endif
 

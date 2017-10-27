@@ -322,7 +322,7 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
                       
                         	result = memcmp(current->value, v, vSize);
 				
-				conditionResult(condition,result);
+				conditionResult(condition,result,&count);
                 }
                 current++;
 
@@ -334,20 +334,16 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 }
 
-int conditionResult(const char * condition , int result) {
+void  conditionResult(const char * condition , int result, int * dst) {
 	
-    int conditionResult = 0 ;
-
 	if (strcmp(">=",condition)==0 && result >=0){
-		return conditionResult++ ;
+		*dst++;
 	}else if ( strcmp("<=",condition)==0 && result >=0) {
-	 	return conditionResult++;     
+	 	dst++;     
 	}else if ( strcmp("=",condition)==0 && result ==0){
-		return conditionResult++;
+		dst++;
 	}else if ( strcmp("<>",condition)==0 && result != 0){
-		return conditionResult++;
+		dst++;
 	}
-
-    return conditionResult;
 
 }
