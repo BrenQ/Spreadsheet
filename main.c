@@ -14,6 +14,7 @@ int main() {
 	char * palabra = "Hola";
 	char * formula = "=sum(A1:A31)";
 	char * functionavg = "=sum(A1:A3)";
+	char * functionIdentity = "=id(A1)";
 
 	SpreadSheet s;
 	init(&s);
@@ -22,22 +23,26 @@ int main() {
 	setNumber(&s, "A3", &valor4, sizeof(float));
 	setNumber(&s, "A12", &valor5, sizeof(float));
 	setNumber(&s, "B1", &valor7, sizeof(int));
-        
-        setNumber(&s, "C4", &valor7, sizeof(int));
+
+	setNumber(&s, "C4", &valor7, sizeof(int));
 	setLabel(&s, "C1", palabra);
-	setSummatory(&s, "C2", formula);	
+	setSummatory(&s, "C2", formula);
 	setAverage(&s, "C3", functionavg);
+	setIdentity(&s, "C5", functionIdentity);
 
 	float dst;
 	getSummatory(&s, "C2", &dst);
-	
-	printf("Sumatoria: %1.2f \n",dst);
-	
+
+	printf("Sumatoria: %1.2f \n", dst);
+
 	float avg;
-        getAverage(&s, "C2", &avg);
-	
-	printf("Promedio: %1.2f \n",avg);
-	
+	getAverage(&s, "C2", &avg);
+
+	float id;
+	getIdentity(&s, "C5", &id);
+
+	printf("Promedio: %1.2f \n", avg);
+
 	get(&s, "B1", &dst);
 
 }

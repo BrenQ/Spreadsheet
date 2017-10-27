@@ -12,6 +12,7 @@
 #include "Spreadsheet.h"
 #include "cell.h"
 #define EXP_FUNC "=%[^'('](%[^':']:%[^')'])"
+#define EXP_FUNC_ID "=%[^'('](%[^')'])"
 #define NUMBER "number"
 #define FUNCTION "function"
 
@@ -40,7 +41,8 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 	if (dst == 0x0) {
 		Cell c;
 		initCell(&c, cellAddresStr, v, vSize, NUMBER);
-		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
 		s->cells[s->cellsCount] = c;
 		s->cellsCount++;
@@ -90,7 +92,8 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 	if (dst == 0x0) {
 		Cell c;
 		initCell(&c, cellAddresStr, v, strlen(v), "text");
-		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
 		s->cells[s->cellsCount] = c;
 		s->cellsCount++;
@@ -103,32 +106,34 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 
 }
 
-
 /**
-   Almacena una funcion en la hoja de calculo
-    @param s Hoja de calculo
-    @param cellAdressStr Direccion de la celda
-    @param cellAdressRefrenceStr Referencia a direccion de la celda
-**/
+ Almacena una funcion en la hoja de calculo
+ @param s Hoja de calculo
+ @param cellAdressStr Direccion de la celda
+ @param cellAdressRefrenceStr Referencia a direccion de la celda
+ **/
 
 void setFunction(SpreadSheet* s, const char* cellAddressStr,
-                const char* cellAddressFunction) {
-	
+		const char* cellAddressFunction) {
+
 	Cell * dst = 0x0;
 
-        searchCelladdres(s, cellAddressStr, &dst);
+	searchCelladdres(s, cellAddressStr, &dst);
 
-        if (dst == 0x0) {
-                Cell c;
-                initCell(&c, cellAddressStr, cellAddressFunction, strlen(cellAddressFunction)+1, FUNCTION);
-                s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
-                s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
-                s->cells[s->cellsCount] = c;
-                s->cellsCount++;
+	if (dst == 0x0) {
+		Cell c;
+		initCell(&c, cellAddressStr, cellAddressFunction,
+				strlen(cellAddressFunction) + 1, FUNCTION);
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
+		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
+		s->cells[s->cellsCount] = c;
+		s->cellsCount++;
 
-        } else {
-                setValue(dst, cellAddressFunction, strlen(cellAddressFunction), FUNCTION);
-        }
+	} else {
+		setValue(dst, cellAddressFunction, strlen(cellAddressFunction),
+				FUNCTION);
+	}
 
 }
 
@@ -141,7 +146,7 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
  **/
 void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressReferenceStr) {
-     setFunction(s,cellAddressStr,cellAddressReferenceStr);
+	setFunction(s, cellAddressStr, cellAddressReferenceStr);
 }
 
 /**
@@ -153,9 +158,9 @@ void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 
  **/
 void setSummatory(SpreadSheet* s, const char* cellAddressStr,
-		const char* cellAddressRangeStr) { 	
+		const char* cellAddressRangeStr) {
 
-	setFunction(s,cellAddressStr,cellAddressRangeStr);
+	setFunction(s, cellAddressStr, cellAddressRangeStr);
 }
 
 /**
@@ -169,7 +174,7 @@ void setSummatory(SpreadSheet* s, const char* cellAddressStr,
 
 void setAverage(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressRangeStr) {
-    setFunction(s,cellAddressStr,cellAddressRangeStr);
+	setFunction(s, cellAddressStr, cellAddressRangeStr);
 }
 
 /**
@@ -206,11 +211,15 @@ void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
  **/
 
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-	Cell * ptr = (Cell*) malloc(sizeof(Cell));
+	Cell * ptr;
+	char cellAddress[4] = "";
 
-	get(s, cellAddressStr, ptr);
-	//searchCelladdres(s, (char*) ptr->value, &dst);
-	//release(&ptr);
+	searchCelladdres(s, cellAddressStr, &ptr);
+	getId((char*) ptr->value, cellAddress);
+	//Liberar Cell
+	searchCelladdres(s, cellAddress, &ptr);
+
+	memcpy(dst, ptr->value, ptr->size);
 }
 
 /**
@@ -227,7 +236,7 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	char iRangeLet[4] = "";
 	char fRangeLet[4] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
-	obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
+	obtainRange((char*) ptr->value, iRangeLet, fRangeLet);
 
 	Cell * current = s->cells;
 	int i = 0;
@@ -235,7 +244,7 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 		if (strcmp(current->type, NUMBER) == 0
 				&& strverscmp(iRangeLet, current->cellAddress) <= 0
 				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
-			sumatory +=  *(float*)(current->value);
+			sumatory += *(float*) (current->value);
 		}
 		current++;
 		i++;
@@ -254,6 +263,13 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 	return;
 }
 
+void getId(char* rangeStr, char* cellAddress) {
+	char func[5] = "";
+	char* cellAddressId = cellAddress;
+	sscanf(rangeStr, EXP_FUNC_ID, func, cellAddressId);
+	return;
+}
+
 /**
  Devuelve el valor de la funcion promedio almacenada en una direccion de memoria
  @param s Hoja de calculo
@@ -263,30 +279,30 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
  **/
 
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-    
-        Cell * ptr;
-        float sumatory = 0;
-	float average = 0;
-        char iRangeLet[4] = "";
-        char fRangeLet[4] = "";
-        searchCelladdres(s, cellAddressStr, &ptr);
-        obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
 
-        Cell * current = s->cells;
-        int count = 0;
-        while ((current - s->cells) < s->cellsCount) {
-                if (strcmp(current->type, NUMBER) == 0
-                                && strverscmp(iRangeLet, current->cellAddress) <= 0
-                                && strverscmp(current->cellAddress, fRangeLet) <= 0) {
-                        sumatory +=  *(float*)(current->value);
-			count++;		
-                }
-                current++;
-            
-        }
-	
-	average =  sumatory / count;
-        memcpy(dst, &average, sizeof(float));
+	Cell * ptr;
+	float sumatory = 0;
+	float average = 0;
+	char iRangeLet[4] = "";
+	char fRangeLet[4] = "";
+	searchCelladdres(s, cellAddressStr, &ptr);
+	obtainRange((char*) ptr->value, iRangeLet, fRangeLet);
+
+	Cell * current = s->cells;
+	int count = 0;
+	while ((current - s->cells) < s->cellsCount) {
+		if (strcmp(current->type, NUMBER) == 0
+				&& strverscmp(iRangeLet, current->cellAddress) <= 0
+				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
+			sumatory += *(float*) (current->value);
+			count++;
+		}
+		current++;
+
+	}
+
+	average = sumatory / count;
+	memcpy(dst, &average, sizeof(float));
 
 }
 
