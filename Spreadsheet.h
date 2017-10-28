@@ -78,11 +78,11 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
 
 	@param s Hoja de calculo
 	@param cellAddressStr Direccion de la celda
-	@param cellAddressStr Rango de la direccion de la celda para contar.si
+	@param cellAddressRangeStr Rango de la direccion de la celda para contar.si
 
  **/
 
-void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr,const char * criteria);
+void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr);
 
    /**
 	Devuelve el valor de una direccion de celda
@@ -134,6 +134,16 @@ void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAdd
 
  **/
 
+ /** Funcion contar.si 
+	@param s Hoja de calculo
+	@param cellAddressStr Direccion de la celda
+	@param condition Tipo de condicion de la funcion
+	@param v Valor de la condicion con la que se compara
+	@param vSize Tamaño del valor
+	@param int * dst Puntero donde se almacena la cantidad de elementos que cumplen la condicion
+
+**/
+ 
  void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst);
 
  void obtainRange(char* rangeStr, char* minRange, char* maxRange);

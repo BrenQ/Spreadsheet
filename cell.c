@@ -29,26 +29,23 @@ void setValue(Cell* this, const void * v, unsigned size, char * type){
 }
 
 void getValue(Cell * this, const char * cellAddress, void * dst){
-	//dst = malloc(this->size);
 	memcpy(dst, this->value, this->size);
 }
 
 void release(Cell* this){
-	free(this->cellAddress);
-	free(this->value);
 
-	this->cellAddress=0x0;
-	this->value=0x0;
+    if(this->cellAddress){
+       free(this->cellAddress);
+    }
+     if(this->value){
+      free(this->value);
+    }
+
+    this->cellAddress=0x0;
+    this->value=0x0;
 }
 
-void mostrar(Cell * this){
-	printf("%s\n", this->cellAddress);
-	printf("%d\n", *(int*)this->value);
-}
 
-void mostrarString(Cell * this){
-	printf("%s\n", this->cellAddress);
-	printf("%s\n", (char*)this->value);
-}
+
 
 

@@ -11,9 +11,12 @@
 
 #include "Spreadsheet.h"
 #include "cell.h"
-#define EXP_FUNC "=%[^'('](%[^':']:%[^')'])"
+#define EXP_FUNC "%[^':']:%[^')']"
+
 #define NUMBER "number"
 #define FUNCTION "function"
+#define TEXT "text"
+#define RANGEVALUE 6  // Maxima cantidad de variaciones de rangos de celdas ZX5000
 
 void init(SpreadSheet* s) {
 	memset(s, 0x0, sizeof(SpreadSheet));
@@ -21,7 +24,19 @@ void init(SpreadSheet* s) {
 }
 
 void cleanUp(SpreadSheet* s) {
+	if (s->cells){
+		Cell* current = s->cells;
 
+		while((current - s->cells) < s->cellsCount){
+
+			release(current);
+			current += current->size;
+		}
+
+		free(s->cells);
+	}
+
+	s->cells = 0x0;
 }
 
 /**
@@ -57,8 +72,7 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
  * Busca el puntero de la celda indicada
  *
  * */
-void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,
-		Cell ** dst) {
+void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst) {
 	Cell * current = s->cells;
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
@@ -89,7 +103,7 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 
 	if (dst == 0x0) {
 		Cell c;
-		initCell(&c, cellAddresStr, v, strlen(v), "text");
+		initCell(&c, cellAddresStr, v, strlen(v), TEXT);
 		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
 		s->cells[s->cellsCount] = c;
@@ -108,7 +122,7 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
    Almacena una funcion en la hoja de calculo
     @param s Hoja de calculo
     @param cellAdressStr Direccion de la celda
-    @param cellAdressRefrenceStr Referencia a direccion de la celda
+    @param cellAdressFunction Funcion almacenada en la celda
 **/
 
 void setFunction(SpreadSheet* s, const char* cellAddressStr,
@@ -145,7 +159,7 @@ void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 }
 
 /**
- Selecciona un rango de direcciones de Celda
+ Almacena la funcion de suma
 
  @param s Hoja de calculo
  @param cellAddressStr Direccion de la celda donde se realiza el calculo
@@ -173,7 +187,7 @@ void setAverage(SpreadSheet* s, const char* cellAddressStr,
 }
 
 /**
- Selecciona un rango de direcciones de Celda
+ Almacena la funcion en la celda 
 
  @param s Hoja de calculo
  @param cellAddressStr Direccion de la celda
@@ -181,7 +195,7 @@ void setAverage(SpreadSheet* s, const char* cellAddressStr,
 
 **/
 
-void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr,const char * criteria){
+void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr){
      setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
@@ -197,8 +211,8 @@ void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAdd
 void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	searchCelladdres(s, cellAddressStr, &ptr);
-	memcpy(dst, ptr->value, 2 * ptr->size);
-	printf("Test");
+	memcpy(dst, ptr->value, ptr->size);
+
 }
 
 /**
@@ -210,12 +224,19 @@ void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
  **/
 
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-	Cell * ptr = (Cell*) malloc(sizeof(Cell));
+	
+	Cell * ptr;
+	char cellAddress[RANGEVALUE] = "";
 
-	get(s, cellAddressStr, ptr);
-	//searchCelladdres(s, (char*) ptr->value, &dst);
-	//release(&ptr);
+	searchCelladdres(s, cellAddressStr, &ptr);
+	
+	searchCelladdres(s, ptr->value, &ptr);
+
+	memcpy(dst, ptr->value, ptr->size);
 }
+
+
+
 
 /**
  Devuelve el valor de la funcion sumatoria almacenada en una direccion de memoria
@@ -228,8 +249,8 @@ void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	float sumatory = 0;
-	char iRangeLet[4] = "";
-	char fRangeLet[4] = "";
+	char iRangeLet[RANGEVALUE] = "";
+	char fRangeLet[RANGEVALUE] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
 	obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
 
@@ -250,13 +271,17 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 }
 
+// Realiza un split de los rangos de las celdas 
+
 void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
-	char func[5] = "";
+
 	char* iRangeLet = minRange;
 	char* fRangeLet = maxRange;
-	sscanf(rangeStr, EXP_FUNC, func, iRangeLet, fRangeLet);
+	sscanf(rangeStr, EXP_FUNC, iRangeLet, fRangeLet);
 	return;
 }
+
+
 
 /**
  Devuelve el valor de la funcion promedio almacenada en una direccion de memoria
@@ -268,11 +293,11 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
     
-         Cell * ptr;
+        Cell * ptr;
         float sumatory = 0;
         float average = 0;
-        char iRangeLet[4] = "";
-        char fRangeLet[4] = "";
+        char iRangeLet[RANGEVALUE] = "";
+        char fRangeLet[RANGEVALUE] = "";
         searchCelladdres(s, cellAddressStr, &ptr);
         obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
 
@@ -306,10 +331,10 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
  void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst){
 
 	Cell * ptr;
-        int count  = 0;
-        char iRangeLet[4] = "";
-        char fRangeLet[4] = "";
+        char iRangeLet[RANGEVALUE] = "";
+        char fRangeLet[RANGEVALUE] = "";
 	int result = 0;
+	int count = 0;
         searchCelladdres(s, cellAddressStr, &ptr);
         obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
 
@@ -328,19 +353,23 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
         }
 	
-
+	memcpy(dst,&count,sizeof(int));
 }
 
 void  conditionResult(const char * condition , int result, int * dst) {
 	
 	if (strcmp(">=",condition)==0 && result >=0){
-		*dst++;
+		(*dst)++;
 	}else if ( strcmp("<=",condition)==0 && result >=0) {
-	 	dst++;     
+	 	(*dst)++;
+	}else if ( strcmp("<",condition)==0 && result <0) {
+                 (*dst)++;
+        }else if ( strcmp(">",condition)==0 && result >0){
+            	(*dst)++;
 	}else if ( strcmp("=",condition)==0 && result ==0){
-		dst++;
+		(*dst)++;
 	}else if ( strcmp("<>",condition)==0 && result != 0){
-		dst++;
+		(*dst)++;
 	}
 
 }
