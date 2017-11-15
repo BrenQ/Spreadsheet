@@ -234,7 +234,6 @@ void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 	Cell * ptr;
-	char cellAddress[RANGEVALUE] = "";
 
 	searchCelladdres(s, cellAddressStr, &ptr);
 
@@ -253,7 +252,7 @@ void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
-	float sumatory = 0;
+	double sumatory = 0.0;
 	char iRangeLet[RANGEVALUE] = "";
 	char fRangeLet[RANGEVALUE] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
@@ -265,19 +264,20 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 		if (strverscmp(iRangeLet, current->cellAddress) <= 0
 				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
 			if (strcmp(current->type, NUMBER_I) == 0){
-				sumatory += *(float*) ((int*) (current->value));
+				int aux = *((int*) (current->value));
+				sumatory += (double) aux;
 			} else if (strcmp(current->type, NUMBER_F) == 0){
-				sumatory += *(float*) (current->value);
+				float aux = *((float*) (current->value));
+				sumatory += (double) aux;
 			} else if (strcmp(current->type, NUMBER_D) == 0){
-				sumatory += *(float*) ((double*) (current->value));
+				sumatory += *(double*) (current->value);
 			}
 		}
 		current++;
 		i++;
 
 	}
-
-	memcpy(dst, &sumatory, sizeof(float));
+	memcpy(dst, &sumatory, sizeof(double));
 
 }
 
@@ -302,28 +302,34 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 	Cell * ptr;
-	float sumatory = 0;
-	float average = 0;
+	double sumatory = 0.0;
+	double average = 0.0;
 	char iRangeLet[RANGEVALUE] = "";
 	char fRangeLet[RANGEVALUE] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
 	obtainRange((char*) ptr->value, iRangeLet, fRangeLet);
 
 	Cell * current = s->cells;
-	int count = 0;
+	double count = 0.0;
 	while ((current - s->cells) < s->cellsCount) {
-		if (strcmp(current->type, NUMBER) == 0
-				&& strverscmp(iRangeLet, current->cellAddress) <= 0
-				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
-			sumatory += *(float*) (current->value);
+		if (strverscmp(iRangeLet, current->cellAddress) <= 0
+				&& strverscmp(current->cellAddress, fRangeLet) <= 0){
+			if (strcmp(current->type, NUMBER_I) == 0){
+				int aux = *((int*) (current->value));
+				sumatory += (double) aux;
+			} else if (strcmp(current->type, NUMBER_F) == 0){
+				float aux = *((float*) (current->value));
+				sumatory += (double) aux;
+			} else if (strcmp(current->type, NUMBER_D) == 0){
+				sumatory += *(double*) (current->value);
+			}
 			count++;
 		}
 		current++;
-
 	}
 
 	average = sumatory / count;
-	memcpy(dst, &average, sizeof(float));
+	memcpy(dst, &average, sizeof(double));
 
 }
 

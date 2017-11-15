@@ -5,7 +5,7 @@
 #include "cell.h"
 
 void initCell(Cell* this, const char * cellAddress, const void * v,
-		unsigned size, char * type) {
+		unsigned size, const char * type) {
 	if (cellAddress == 0x0) {
 		return;
 	}
@@ -19,7 +19,7 @@ void initCell(Cell* this, const char * cellAddress, const void * v,
 	strcpy(this->type, type);
 }
 
-void setValue(Cell* this, const void * v, unsigned size, char * type) {
+void setValue(Cell* this, const void * v, unsigned size, const char * type) {
 	this->value = realloc(this->value, size);
 	memcpy(this->value, v, size);
 	this->size = size;

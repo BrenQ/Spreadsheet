@@ -4,6 +4,10 @@
 
 #include "cell.h"
 #include "Spreadsheet.h"
+#define NUMBER_F "number_float"
+#define NUMBER_I "number_int"
+#define NUMBER_D "number_double"
+#define FUNCTION "function"
 
 int main() {
 
@@ -26,30 +30,31 @@ int main() {
 	char * producto3 = "Fideos";
 	char * producto4 = "Galletitas";
 
-	char * sumatoria = "B2:B5";
-	char * promedio = "B2:B5";
+	char * sumatoria = "B1:B5";
+	char * promedio = "B1:B5";
 	char * countif = "C2:C5";
 
 	SpreadSheet s;
 	init(&s);
 	// Almaceno los precios de los productos
 
-	setNumber(&s, "B2", &precio1, sizeof(float));
-	setNumber(&s, "B3", &precio2, sizeof(float));
-	setNumber(&s, "B4", &precio3, sizeof(float));
-	setNumber(&s, "B5", &precio4, sizeof(float));
+	setNumber(&s, "B1", &cantidad1, sizeof(int), NUMBER_I);
+	setNumber(&s, "B2", &precio1, sizeof(float), NUMBER_F);
+	setNumber(&s, "B3", &precio2, sizeof(float), NUMBER_F);
+	setNumber(&s, "B4", &precio3, sizeof(float), NUMBER_F);
+	setNumber(&s, "B5", &precio4, sizeof(float), NUMBER_F);
 
 	// Se indican las cantidades de productos comprados
 
-	setNumber(&s, "C2", &cantidad1, sizeof(int));
-	setNumber(&s, "C3", &cantidad2, sizeof(int));
-	setNumber(&s, "C4", &cantidad3, sizeof(int));
-	setNumber(&s, "C5", &cantidad4, sizeof(int));
+	setNumber(&s, "C2", &cantidad1, sizeof(int), NUMBER_I);
+	setNumber(&s, "C3", &cantidad2, sizeof(int), NUMBER_I);
+	setNumber(&s, "C4", &cantidad3, sizeof(int), NUMBER_I);
+	setNumber(&s, "C5", &cantidad4, sizeof(int), NUMBER_I);
 
 	// Completo los labels y textos
 
 	setLabel(&s, "A1", titulo1);
-	setLabel(&s, "B1", titulo2);
+	setLabel(&s, "B6", titulo2);
 	setLabel(&s, "C1", titulo3);
 
 	setLabel(&s, "A2", producto1);
@@ -66,10 +71,10 @@ int main() {
 
 	// Testeo de funciones
 
-	float dst;
+	double dst;
 	getSummatory(&s, "B6", &dst);
 
-	float avg;
+	double avg;
 
 	getAverage(&s, "B7", &avg);
 

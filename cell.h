@@ -16,8 +16,8 @@ typedef struct _cell {
 } Cell;
 
 void initCell(Cell* this, const char * cellAddress, const void * v,
-		unsigned size, char * type);
-void setValue(Cell * this, const void * v, unsigned size, char * type);
+		unsigned size, const char * type);
+void setValue(Cell * this, const void * v, unsigned size, const char * type);
 void getValue(Cell * this, const char * cellAddress, void * dst);
 void release(Cell * this);
 
