@@ -15,10 +15,10 @@ int main() {
 	char * titulo2 = "Precio";
 	char * titulo3 = "Cantidad";
 
-	float precio1 = 20.0;
-	float precio2 = 38.4;
-	float precio3 = 65.5;
-	float precio4 = 30.0;
+	double precio1 = 20.0;
+	double precio2 = 38.4;
+	double precio3 = 65.5;
+	double precio4 = 30.0;
 
 	int cantidad1 = 3;
 	int cantidad2 = 2;
@@ -38,18 +38,18 @@ int main() {
 	init(&s);
 	// Almaceno los precios de los productos
 
-	setNumber(&s, "B1", &cantidad1, sizeof(int), NUMBER_I);
-	setNumber(&s, "B2", &precio1, sizeof(float), NUMBER_F);
-	setNumber(&s, "B3", &precio2, sizeof(float), NUMBER_F);
-	setNumber(&s, "B4", &precio3, sizeof(float), NUMBER_F);
-	setNumber(&s, "B5", &precio4, sizeof(float), NUMBER_F);
+	setNumber(&s, "B1", &cantidad1, sizeof(int));
+	setNumber(&s, "B2", &precio1, sizeof(double));
+	setNumber(&s, "B3", &precio2, sizeof(double));
+	setNumber(&s, "B4", &precio3, sizeof(double));
+	setNumber(&s, "B5", &precio4, sizeof(double));
 
 	// Se indican las cantidades de productos comprados
 
-	setNumber(&s, "C2", &cantidad1, sizeof(int), NUMBER_I);
-	setNumber(&s, "C3", &cantidad2, sizeof(int), NUMBER_I);
-	setNumber(&s, "C4", &cantidad3, sizeof(int), NUMBER_I);
-	setNumber(&s, "C5", &cantidad4, sizeof(int), NUMBER_I);
+	setNumber(&s, "C2", &cantidad1, sizeof(int));
+	setNumber(&s, "C3", &cantidad2, sizeof(int));
+	setNumber(&s, "C4", &cantidad3, sizeof(int));
+	setNumber(&s, "C5", &cantidad4, sizeof(int));
 
 	// Completo los labels y textos
 

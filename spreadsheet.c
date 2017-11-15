@@ -13,9 +13,7 @@
 #include "cell.h"
 #define EXP_FUNC "%[^':']:%[^')']"
 
-#define NUMBER_F "number_float"
-#define NUMBER_I "number_int"
-#define NUMBER_D "number_double"
+#define NUMBER "number"
 #define FUNCTION "function"
 #define TEXT "text"
 #define RANGEVALUE 6  // Maxima cantidad de variaciones de rangos de celdas ZX5000
@@ -48,15 +46,14 @@ void cleanUp(SpreadSheet* s) {
  @Pparam v Es el valor al que se va actualizar f
  @param vsize es el tamaño del valor que vamos a setear
  **/
-void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
-		const unsigned vSize, const char* type) {
+void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v, const unsigned vSize) {
 	Cell * dst = 0x0;
 
 	searchCelladdres(s, cellAddresStr, &dst);
 
 	if (dst == 0x0) {
 		Cell c;
-		initCell(&c, cellAddresStr, v, vSize, type);
+		initCell(&c, cellAddresStr, v, vSize, NUMBER);
 		s->cells = (Cell *) realloc(s->cells,
 				(s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
@@ -65,7 +62,7 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 
 	} else {
 
-		setValue(dst, v, vSize, type);
+		setValue(dst, v, vSize, NUMBER);
 
 	}
 
@@ -75,8 +72,7 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
  * Busca el puntero de la celda indicada
  *
  * */
-void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,
-		Cell ** dst) {
+void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst) {
 	Cell * current = s->cells;
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
@@ -263,13 +259,10 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	while ((current - s->cells) < s->cellsCount) {
 		if (strverscmp(iRangeLet, current->cellAddress) <= 0
 				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
-			if (strcmp(current->type, NUMBER_I) == 0){
+			if (current->size == sizeof(int)){
 				int aux = *((int*) (current->value));
 				sumatory += (double) aux;
-			} else if (strcmp(current->type, NUMBER_F) == 0){
-				float aux = *((float*) (current->value));
-				sumatory += (double) aux;
-			} else if (strcmp(current->type, NUMBER_D) == 0){
+			} else if (current->size == sizeof(double)){
 				sumatory += *(double*) (current->value);
 			}
 		}
@@ -314,13 +307,10 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	while ((current - s->cells) < s->cellsCount) {
 		if (strverscmp(iRangeLet, current->cellAddress) <= 0
 				&& strverscmp(current->cellAddress, fRangeLet) <= 0){
-			if (strcmp(current->type, NUMBER_I) == 0){
+			if (current->size == sizeof(int)){
 				int aux = *((int*) (current->value));
 				sumatory += (double) aux;
-			} else if (strcmp(current->type, NUMBER_F) == 0){
-				float aux = *((float*) (current->value));
-				sumatory += (double) aux;
-			} else if (strcmp(current->type, NUMBER_D) == 0){
+			} else if (current->size == sizeof(double)){
 				sumatory += *(double*) (current->value);
 			}
 			count++;

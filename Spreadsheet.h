@@ -19,7 +19,7 @@ typedef struct _SpreadSheet{
 	@Pparam v Es el valor al que se va actualizar f
 	@param vsize es el tamaño del valor que vamos a setear
  **/
- void setNumber( SpreadSheet* s, const char* cellAddresStr, const void* v, const unsigned vSize, const char* type);
+ void setNumber( SpreadSheet* s, const char* cellAddresStr, const void* v, const unsigned vSize);
 
  /**
 	Label es la etiqueta de la columna
