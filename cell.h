@@ -18,7 +18,11 @@ typedef struct _cell {
 void initCell(Cell* this, const char * cellAddress, const void * v,
 		unsigned size, const char * type);
 void setValue(Cell * this, const void * v, unsigned size, const char * type);
-void getValue(Cell * this, const char * cellAddress, void * dst);
+//void getValue(Cell * this, void * dst);
+void * getValue (Cell * this );
+char * getCellAddress(Cell * this);
+char * getType(Cell * this);
+int getSize(Cell * this);
 void release(Cell * this);
 
 #endif

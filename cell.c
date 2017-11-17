@@ -27,8 +27,26 @@ void setValue(Cell* this, const void * v, unsigned size, const char * type) {
 
 }
 
-void getValue(Cell * this, const char * cellAddress, void * dst) {
+/* d getValue(Cell * this, void * dst) {
 	memcpy(dst, this->value, this->size);
+}
+
+*/
+void * getValue (Cell * this ) {
+    
+     return this->value; 	
+}
+
+char * getCellAddress(Cell * this){
+    return this->cellAddress;
+}
+
+char * getType(Cell * this){
+    return this->type;	
+}
+
+int getSize(Cell * this){
+   return this->size;
 }
 
 void release(Cell* this) {
@@ -42,5 +60,7 @@ void release(Cell* this) {
 
 	this->cellAddress = 0x0;
 	this->value = 0x0;
+
 }
+
 
