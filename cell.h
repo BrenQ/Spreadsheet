@@ -9,20 +9,62 @@
 #ifndef CELL_H_
 #define CELL_H_
 
-
-typedef struct _cell
-{
+typedef struct _cell {
 	char * cellAddress;
-	void * value ;
+	void * value;
 	char * type;
 	unsigned size;
 } Cell;
 
-void initCell(Cell* this, const char * cellAddress,const void * v , unsigned size,char * type);
-void setValue(Cell * this, const void * v ,unsigned size,char * type);
-void getValue(Cell * this,const char * cellAddress,void * dst);
-void release(Cell * this);
+/** Inicializa la celda 
+    @param this Celda 
+    @param cellAddress Direccion de la celda
+    @param v valor a almacenar
+    @param size tamaño de la celda
+    @param type Tipo del valor
 
+**/
+void initCell(Cell* this, const char * cellAddress, const void * v,
+		unsigned size, const char * type);
+
+/** Setea valor de la celda y sus propiedades
+    @param this Celda 
+    @param v valor a almacenar
+    @param size tamaño de la celda
+    @param type Tipo del valor
+
+**/
+void setValue(Cell * this, const void * v, unsigned size, const char * type);
+
+/** Retorna valor de la celda
+   @param this Celda 
+**/
+
+void * getValue (Cell * this );
+
+/** Retorna direccion de la celda
+   @param this Celda 
+**/
+
+char * getCellAddress(Cell * this);
+
+/** Retorna tipo de la celda
+   @param this Celda 
+**/
+
+char * getType(Cell * this);
+
+/** Retorna tamaño de la celda
+   @param this Celda 
+**/
+
+int   getSize(Cell * this);
+
+/** Reinicializa la celda
+   @param this Celda 
+**/
+
+void release(Cell * this);
 
 #endif
 

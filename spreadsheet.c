@@ -30,7 +30,7 @@ void cleanUp(SpreadSheet* s) {
 		while((current - s->cells) < s->cellsCount){
 
 			release(current);
-			current += current->size;
+			current += getSize(current);
 		}
 
 		free(s->cells);
@@ -77,7 +77,7 @@ void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
 
-		if (strcmp(current->cellAddress, cellAddresStr) == 0) {
+		if (strcmp(getCellAddress(current), cellAddresStr) == 0) {
 			*dst = current;
 			return 0;
 		}
@@ -211,7 +211,7 @@ void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAdd
 void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	searchCelladdres(s, cellAddressStr, &ptr);
-	memcpy(dst, ptr->value, ptr->size);
+	memcpy(dst, getValue(ptr), getSize(ptr));
 
 }
 
@@ -230,9 +230,9 @@ void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 	searchCelladdres(s, cellAddressStr, &ptr);
 	
-	searchCelladdres(s, ptr->value, &ptr);
+	searchCelladdres(s, getValue(ptr), &ptr);
 
-	memcpy(dst, ptr->value, ptr->size);
+	memcpy(dst, getValue(ptr), getSize(ptr));
 }
 
 
@@ -252,15 +252,15 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	char iRangeLet[RANGEVALUE] = "";
 	char fRangeLet[RANGEVALUE] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
-	obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
+	obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
 
 	Cell * current = s->cells;
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
-		if (strcmp(current->type, NUMBER) == 0
-				&& strverscmp(iRangeLet, current->cellAddress) <= 0
-				&& strverscmp(current->cellAddress, fRangeLet) <= 0) {
-			sumatory +=  *(float*)(current->value);
+		if (strcmp(getType(current), NUMBER) == 0
+				&& strverscmp(iRangeLet, getCellAddress(current)) <= 0
+				&& strverscmp(getCellAddress(current), fRangeLet) <= 0) {
+			sumatory +=  *(float*)(getValue(current));
 		}
 		current++;
 		i++;
@@ -299,15 +299,15 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
         char iRangeLet[RANGEVALUE] = "";
         char fRangeLet[RANGEVALUE] = "";
         searchCelladdres(s, cellAddressStr, &ptr);
-        obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
+        obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
 
         Cell * current = s->cells;
         int count = 0;
         while ((current - s->cells) < s->cellsCount) {
-                if (strcmp(current->type, NUMBER) == 0
-                                && strverscmp(iRangeLet, current->cellAddress) <= 0
-                                && strverscmp(current->cellAddress, fRangeLet) <= 0) {
-                        sumatory +=  *(float*)(current->value);
+                if (strcmp(getType(current), NUMBER) == 0
+                                && strverscmp(iRangeLet, getCellAddress(current)) <= 0
+                                && strverscmp(getCellAddress(current), fRangeLet) <= 0) {
+                        sumatory +=  *(float*)(getValue(current));
                         count++;
                 }
                 current++;
@@ -336,16 +336,16 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	int result = 0;
 	int count = 0;
         searchCelladdres(s, cellAddressStr, &ptr);
-        obtainRange((char*)ptr->value, iRangeLet, fRangeLet);
+        obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
 
         Cell * current = s->cells;
         
 	while ((current - s->cells) < s->cellsCount) {
-                if (strcmp(current->type, FUNCTION) != 0
-                                && strverscmp(iRangeLet, current->cellAddress) <= 0
-                                && strverscmp(current->cellAddress, fRangeLet) <= 0) {
+                if (strcmp(getType(current), FUNCTION) != 0
+                                && strverscmp(iRangeLet, getCellAddress(current)) <= 0
+                                && strverscmp(getCellAddress(current), fRangeLet) <= 0) {
                       
-                        	result = memcmp(current->value, v, vSize);
+                        	result = memcmp(getValue(current), v, vSize);
 				
 				conditionResult(condition,result,&count);
                 }
