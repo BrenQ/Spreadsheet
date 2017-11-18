@@ -39,13 +39,6 @@ void cleanUp(SpreadSheet* s) {
 	s->cells = 0x0;
 }
 
-/**
-
- @param: s Es la hoja de calculo a la que hace referencia
- @param cellAddressStr Direccion de la celda a setear valor ( A8,C9)
- @Pparam v Es el valor al que se va actualizar f
- @param vsize es el tamaño del valor que vamos a setear
- **/
 void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 		const unsigned vSize) {
 	Cell * dst = 0x0;
@@ -68,10 +61,6 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 
 }
 
-/**
- * Busca el puntero de la celda indicada
- *
- * */
 void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst) {
 	Cell * current = s->cells;
 	int i = 0;
@@ -88,13 +77,6 @@ void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst
 	return 0x0;
 }
 
-/**
- Label es la etiqueta de la columna
- @param s Hoja de calculo
- @param cellAddressStr es la direccion de la celda A4
- @param v es el valor de la columna
-
- **/
 void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 
 	Cell * dst = 0x0;
@@ -117,14 +99,6 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 
 }
 
-
-/**
-   Almacena una funcion en la hoja de calculo
-    @param s Hoja de calculo
-    @param cellAdressStr Direccion de la celda
-    @param cellAdressFunction Funcion almacenada en la celda
-**/
-
 void setFunction(SpreadSheet* s, const char* cellAddressStr,
                 const char* cellAddressFunction) {
 	
@@ -146,82 +120,32 @@ void setFunction(SpreadSheet* s, const char* cellAddressStr,
 
 }
 
-/**
- Selecciona una celda de la hoja de calculo y
- @param s Hoja de calculo
- @param cellAdressStr Direccion de la celda
- @param cellAdressRefrenceStr Referencia a direccion de la celda
-
- **/
 void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressReferenceStr) {
      setFunction(s,cellAddressStr,cellAddressReferenceStr);
 }
 
-/**
- Almacena la funcion de suma
-
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda donde se realiza el calculo
- @param cellAddressStr Rango de la direccion de la celda para sumar
-
- **/
 void setSummatory(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressRangeStr) { 	
 
 	setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
-/**
- Selecciona un rango de direcciones de Celda
-
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda donde se realiza el calculo
- @param cellAddressStr Rango de la direccion de la celda para realizar el promedio
-
- **/
-
 void setAverage(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressRangeStr) {
     setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
-/**
- Almacena la funcion en la celda 
-
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param cellAddressStr Rango de la direccion de la celda para contar.si
-
-**/
-
 void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr){
      setFunction(s,cellAddressStr,cellAddressRangeStr);
 }
 
-/**
-
- Devuelve el valor de una direccion de celda
-
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param dst Retorno donde almacenar el valor de una celda
-
- **/
 void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	searchCelladdres(s, cellAddressStr, &ptr);
 	memcpy(dst, getValue(ptr), getSize(ptr));
 
 }
-
-/**
- Devuelve el valor de la funcion identidad almacenada en una direccion de memoria
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param dst Puntero a variable que permite almacenar el valor de retorno
-
- **/
 
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	
@@ -234,18 +158,6 @@ void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 	memcpy(dst, getValue(ptr), getSize(ptr));
 }
-
-
-
-
-/**
- Devuelve el valor de la funcion sumatoria almacenada en una direccion de memoria
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param dst Puntero a variable que permite almacenar el valor de retorno
-
- **/
-
 void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	float sumatory = 0;
@@ -271,8 +183,6 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 }
 
-// Realiza un split de los rangos de las celdas 
-
 void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 
 	char* iRangeLet = minRange;
@@ -280,16 +190,6 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 	sscanf(rangeStr, EXP_FUNC, iRangeLet, fRangeLet);
 	return;
 }
-
-
-
-/**
- Devuelve el valor de la funcion promedio almacenada en una direccion de memoria
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param dst Puntero a variable que permite almacenar el valor de retorno
-
- **/
 
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
     
@@ -320,15 +220,7 @@ void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 }
 
-/**
- Devuelve el valor de la funcion contar.si almacenada en una direccion de memoria
- @param s Hoja de calculo
- @param cellAddressStr Direccion de la celda
- @param dst Puntero a variable que permite almacenar el valor de retorno
-
- **/
-
- void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst){
+void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst){
 
 	Cell * ptr;
         char iRangeLet[RANGEVALUE] = "";
