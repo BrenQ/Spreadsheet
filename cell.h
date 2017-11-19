@@ -1,4 +1,3 @@
-
 /*
  * Cell.h
  *
@@ -17,55 +16,64 @@ typedef struct _cell {
 } Cell;
 
 /** Inicializa la celda 
-    @param this Celda 
-    @param cellAddress Direccion de la celda
-    @param v valor a almacenar
-    @param size tamaño de la celda
-    @param type Tipo del valor
-
-**/
+ *
+ * @param this Celda
+ * @param cellAddress Direccion de la celda
+ * @param v valor a almacenar
+ * @param size tamaño de la celda
+ * @param type Tipo del valor
+ **/
 void initCell(Cell* this, const char * cellAddress, const void * v,
 		unsigned size, const char * type);
 
-/** Setea valor de la celda y sus propiedades
-    @param this Celda 
-    @param v valor a almacenar
-    @param size tamaño de la celda
-    @param type Tipo del valor
-
-**/
+/**
+ * Setea valor de la celda y sus propiedades.
+ *
+ * @param this Celda.
+ * @param v valor a almacenar.
+ * @param size tamaño de la celda.
+ * @param type Tipo del valor.
+ **/
 void setValue(Cell * this, const void * v, unsigned size, const char * type);
 
-/** Retorna valor de la celda
-   @param this Celda 
-**/
+/**
+ * Retorna valor de la celda.
+ *
+ * @param this Celda.
+ **/
 
-void * getValue (Cell * this );
+void * getValue(Cell * this);
 
-/** Retorna direccion de la celda
-   @param this Celda 
-**/
+/**
+ * Retorna direccion de la celda.
+ *
+ * @param this Celda.
+ **/
 
 char * getCellAddress(Cell * this);
 
-/** Retorna tipo de la celda
-   @param this Celda 
-**/
+/**
+ * Retorna tipo de la celda.
+ *
+ * @param this Celda.
+ **/
 
 char * getType(Cell * this);
 
-/** Retorna tamaño de la celda
-   @param this Celda 
-**/
+/**
+ * Retorna tamaño de la celda.
+ *
+ * @param this Celda.
+ **/
 
-int   getSize(Cell * this);
+int getSize(Cell * this);
 
-/** Reinicializa la celda
-   @param this Celda 
-**/
-
+/**
+ * Reinicializa la celda.
+ *
+ * @param this Celda.
+ **/
 void release(Cell * this);
 
 #endif
-
 

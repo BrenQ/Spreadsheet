@@ -16,6 +16,13 @@
 #define NUMBER "number"
 #define FUNCTION "function"
 #define TEXT "text"
+#define GREATER_OR_EQUAL ">="
+#define LESS_OR_EQUAL "<="
+#define LESS "<"
+#define GREATER ">"
+#define EQUAL "="
+#define DISTINCT "<>"
+
 #define RANGEVALUE 6  // Maxima cantidad de variaciones de rangos de celdas ZX5000
 
 void init(SpreadSheet* s) {
@@ -24,10 +31,10 @@ void init(SpreadSheet* s) {
 }
 
 void cleanUp(SpreadSheet* s) {
-	if (s->cells){
+	if (s->cells) {
 		Cell* current = s->cells;
 
-		while((current - s->cells) < s->cellsCount){
+		while ((current - s->cells) < s->cellsCount) {
 
 			release(current);
 			current += getSize(current);
@@ -48,7 +55,8 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 	if (dst == 0x0) {
 		Cell c;
 		initCell(&c, cellAddresStr, v, vSize, NUMBER);
-		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
 		s->cells[s->cellsCount] = c;
 		s->cellsCount++;
@@ -61,7 +69,8 @@ void setNumber(SpreadSheet* s, const char* cellAddresStr, const void* v,
 
 }
 
-void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr, Cell ** dst) {
+void * searchCelladdres(SpreadSheet * s, const char * cellAddresStr,
+		Cell ** dst) {
 	Cell * current = s->cells;
 	int i = 0;
 	while ((current - s->cells) < s->cellsCount) {
@@ -86,7 +95,8 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 	if (dst == 0x0) {
 		Cell c;
 		initCell(&c, cellAddresStr, v, strlen(v), TEXT);
-		s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
 		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
 		s->cells[s->cellsCount] = c;
 		s->cellsCount++;
@@ -100,44 +110,48 @@ void setLabel(SpreadSheet* s, const char* cellAddresStr, const char* v) {
 }
 
 void setFunction(SpreadSheet* s, const char* cellAddressStr,
-                const char* cellAddressFunction) {
-	
+		const char* cellAddressFunction) {
+
 	Cell * dst = 0x0;
 
-        searchCelladdres(s, cellAddressStr, &dst);
+	searchCelladdres(s, cellAddressStr, &dst);
 
-        if (dst == 0x0) {
-                Cell c;
-                initCell(&c, cellAddressStr, cellAddressFunction, strlen(cellAddressFunction)+1, FUNCTION);
-                s->cells = (Cell *) realloc(s->cells, (s->cellsCount + 1) * sizeof(Cell));
-                s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
-                s->cells[s->cellsCount] = c;
-                s->cellsCount++;
+	if (dst == 0x0) {
+		Cell c;
+		initCell(&c, cellAddressStr, cellAddressFunction,
+				strlen(cellAddressFunction) + 1, FUNCTION);
+		s->cells = (Cell *) realloc(s->cells,
+				(s->cellsCount + 1) * sizeof(Cell));
+		s->cells[s->cellsCount] = *(Cell*) malloc(sizeof(Cell));
+		s->cells[s->cellsCount] = c;
+		s->cellsCount++;
 
-        } else {
-                setValue(dst, cellAddressFunction, strlen(cellAddressFunction), FUNCTION);
-        }
+	} else {
+		setValue(dst, cellAddressFunction, strlen(cellAddressFunction),
+				FUNCTION);
+	}
 
 }
 
 void setIdentity(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressReferenceStr) {
-     setFunction(s,cellAddressStr,cellAddressReferenceStr);
+	setFunction(s, cellAddressStr, cellAddressReferenceStr);
 }
 
 void setSummatory(SpreadSheet* s, const char* cellAddressStr,
-		const char* cellAddressRangeStr) { 	
+		const char* cellAddressRangeStr) {
 
-	setFunction(s,cellAddressStr,cellAddressRangeStr);
+	setFunction(s, cellAddressStr, cellAddressRangeStr);
 }
 
 void setAverage(SpreadSheet* s, const char* cellAddressStr,
 		const char* cellAddressRangeStr) {
-    setFunction(s,cellAddressStr,cellAddressRangeStr);
+	setFunction(s, cellAddressStr, cellAddressRangeStr);
 }
 
-void setCountIf(SpreadSheet* s, const char * cellAddressStr,const char * cellAddressRangeStr){
-     setFunction(s,cellAddressStr,cellAddressRangeStr);
+void setCountIf(SpreadSheet* s, const char * cellAddressStr,
+		const char * cellAddressRangeStr) {
+	setFunction(s, cellAddressStr, cellAddressRangeStr);
 }
 
 void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
@@ -148,23 +162,24 @@ void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 }
 
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-	
+
 	Cell * ptr;
 	char cellAddress[RANGEVALUE] = "";
 
 	searchCelladdres(s, cellAddressStr, &ptr);
-	
+
 	searchCelladdres(s, getValue(ptr), &ptr);
 
 	memcpy(dst, getValue(ptr), getSize(ptr));
 }
+
 void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 	Cell * ptr;
 	float sumatory = 0;
 	char iRangeLet[RANGEVALUE] = "";
 	char fRangeLet[RANGEVALUE] = "";
 	searchCelladdres(s, cellAddressStr, &ptr);
-	obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
+	obtainRange((char*) getValue(ptr), iRangeLet, fRangeLet);
 
 	Cell * current = s->cells;
 	int i = 0;
@@ -172,7 +187,7 @@ void getSummatory(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 		if (strcmp(getType(current), NUMBER) == 0
 				&& strverscmp(iRangeLet, getCellAddress(current)) <= 0
 				&& strverscmp(getCellAddress(current), fRangeLet) <= 0) {
-			sumatory +=  *(float*)(getValue(current));
+			sumatory += *(float*) (getValue(current));
 		}
 		current++;
 		i++;
@@ -192,76 +207,74 @@ void obtainRange(char* rangeStr, char* minRange, char* maxRange) {
 }
 
 void getAverage(SpreadSheet* s, const char* cellAddressStr, void* dst) {
-    
-        Cell * ptr;
-        float sumatory = 0;
-        float average = 0;
-        char iRangeLet[RANGEVALUE] = "";
-        char fRangeLet[RANGEVALUE] = "";
-        searchCelladdres(s, cellAddressStr, &ptr);
-        obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
-
-        Cell * current = s->cells;
-        int count = 0;
-        while ((current - s->cells) < s->cellsCount) {
-                if (strcmp(getType(current), NUMBER) == 0
-                                && strverscmp(iRangeLet, getCellAddress(current)) <= 0
-                                && strverscmp(getCellAddress(current), fRangeLet) <= 0) {
-                        sumatory +=  *(float*)(getValue(current));
-                        count++;
-                }
-                current++;
-
-        }
-
-        average =  sumatory / count;
-        memcpy(dst, &average, sizeof(float));
-    
-
-}
-
-void getCountIf(SpreadSheet* s, const char * cellAddressStr, const char * condition , const void * v , const unsigned vSize, int * dst){
 
 	Cell * ptr;
-        char iRangeLet[RANGEVALUE] = "";
-        char fRangeLet[RANGEVALUE] = "";
-	int result = 0;
+	float sumatory = 0;
+	float average = 0;
+	char iRangeLet[RANGEVALUE] = "";
+	char fRangeLet[RANGEVALUE] = "";
+	searchCelladdres(s, cellAddressStr, &ptr);
+	obtainRange((char*) getValue(ptr), iRangeLet, fRangeLet);
+
+	Cell * current = s->cells;
 	int count = 0;
-        searchCelladdres(s, cellAddressStr, &ptr);
-        obtainRange((char*)getValue(ptr), iRangeLet, fRangeLet);
-
-        Cell * current = s->cells;
-        
 	while ((current - s->cells) < s->cellsCount) {
-                if (strcmp(getType(current), FUNCTION) != 0
-                                && strverscmp(iRangeLet, getCellAddress(current)) <= 0
-                                && strverscmp(getCellAddress(current), fRangeLet) <= 0) {
-                      
-                        	result = memcmp(getValue(current), v, vSize);
-				
-				conditionResult(condition,result,&count);
-                }
-                current++;
+		if (strcmp(getType(current), NUMBER) == 0
+				&& strverscmp(iRangeLet, getCellAddress(current)) <= 0
+				&& strverscmp(getCellAddress(current), fRangeLet) <= 0) {
+			sumatory += *(float*) (getValue(current));
+			count++;
+		}
+		current++;
 
-        }
-	
-	memcpy(dst,&count,sizeof(int));
-}
-
-void  conditionResult(const char * condition , int result, int * dst) {
-	
-	if (strcmp(">=",condition)==0 && result >=0){
-		(*dst)++;
-	}else if ( strcmp("<=",condition)==0 && result >=0) {
-	 	(*dst)++;
-	}else if ( strcmp("<",condition)==0 && result <0) {
-                 (*dst)++;
-        }else if ( strcmp(">",condition)==0 && result >0){
-            	(*dst)++;
-	}else if ( strcmp("=",condition)==0 && result ==0){
-		(*dst)++;
-	}else if ( strcmp("<>",condition)==0 && result != 0){
-		(*dst)++;
 	}
 
+	average = sumatory / count;
+	memcpy(dst, &average, sizeof(float));
+
+}
+
+void getCountIf(SpreadSheet* s, const char * cellAddressStr,
+		const char * condition, const void * v, const unsigned vSize, int * dst) {
+
+	Cell * ptr;
+	char iRangeLet[RANGEVALUE] = "";
+	char fRangeLet[RANGEVALUE] = "";
+	int result = 0;
+	int count = 0;
+	searchCelladdres(s, cellAddressStr, &ptr);
+	obtainRange((char*) getValue(ptr), iRangeLet, fRangeLet);
+
+	Cell * current = s->cells;
+
+	while ((current - s->cells) < s->cellsCount) {
+		if (strcmp(getType(current), FUNCTION) != 0
+				&& strverscmp(iRangeLet, getCellAddress(current)) <= 0
+				&& strverscmp(getCellAddress(current), fRangeLet) <= 0) {
+
+			result = memcmp(getValue(current), v, vSize);
+			conditionResult(condition, result, &count);
+		}
+		current++;
+
+	}
+
+	memcpy(dst, &count, sizeof(int));
+}
+
+void conditionResult(const char * condition, int result, int * dst) {
+
+	if (strcmp(GREATER_OR_EQUAL, condition) == 0 && result >= 0) {
+		(*dst)++;
+	} else if (strcmp(LESS_OR_EQUAL, condition) == 0 && result >= 0) {
+		(*dst)++;
+	} else if (strcmp(LESS, condition) == 0 && result < 0) {
+		(*dst)++;
+	} else if (strcmp(GREATER, condition) == 0 && result > 0) {
+		(*dst)++;
+	} else if (strcmp(EQUAL, condition) == 0 && result == 0) {
+		(*dst)++;
+	} else if (strcmp(DISTINCT, condition) == 0 && result != 0) {
+		(*dst)++;
+	}
 }

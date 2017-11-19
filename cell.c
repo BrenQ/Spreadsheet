@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,22 +27,21 @@ void setValue(Cell* this, const void * v, unsigned size, const char * type) {
 
 }
 
+void * getValue(Cell * this) {
 
-void * getValue (Cell * this ) {
-    
-     return this->value; 	
+	return this->value;
 }
 
-char * getCellAddress(Cell * this){
-    return this->cellAddress;
+char * getCellAddress(Cell * this) {
+	return this->cellAddress;
 }
 
-char * getType(Cell * this){
-    return this->type;	
+char * getType(Cell * this) {
+	return this->type;
 }
 
-int getSize(Cell * this){
-   return this->size;
+int getSize(Cell * this) {
+	return this->size;
 }
 
 void release(Cell* this) {
@@ -59,6 +57,4 @@ void release(Cell* this) {
 	this->value = 0x0;
 
 }
-
-
 
