@@ -3,6 +3,12 @@
 
 #include "cell.h"
 
+/**
+ * Estructura de una hoja de calculo.
+ *
+ * @param cells Lista de celdas.
+ * @param cellsCount Cantidad de celdas.
+ */
 typedef struct _SpreadSheet {
 	Cell * cells;
 	unsigned cellsCount;

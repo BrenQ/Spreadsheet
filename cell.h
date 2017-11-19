@@ -8,6 +8,14 @@
 #ifndef CELL_H_
 #define CELL_H_
 
+/**
+ * Estructura de una celda.
+ *
+ * @param cellAddress La ubicacion en la hoja.
+ * @param value Puntero al valor.
+ * @param type Tipo del valor.
+ * @param size Tamaño del valir
+ */
 typedef struct _cell {
 	char * cellAddress;
 	void * value;
