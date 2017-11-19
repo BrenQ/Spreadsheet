@@ -23,7 +23,7 @@
 #define EQUAL "="
 #define DISTINCT "<>"
 
-#define RANGEVALUE 6  // Maxima cantidad de variaciones de rangos de celdas ZX5000
+#define RANGEVALUE 7 // Maxima cantidad de variaciones de rangos de celdas ZX5000
 
 void init(SpreadSheet* s) {
 	memset(s, 0x0, sizeof(SpreadSheet));
@@ -164,7 +164,6 @@ void get(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 void getIdentity(SpreadSheet* s, const char* cellAddressStr, void* dst) {
 
 	Cell * ptr;
-	char cellAddress[RANGEVALUE] = "";
 
 	searchCelladdres(s, cellAddressStr, &ptr);
 
