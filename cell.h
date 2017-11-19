@@ -14,7 +14,7 @@
  * @param cellAddress La ubicacion en la hoja.
  * @param value Puntero al valor.
  * @param type Tipo del valor.
- * @param size Tamaño del valir
+ * @param size Tamaño del valor
  */
 typedef struct _cell {
 	char * cellAddress;
